@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -32,9 +34,17 @@ public class RobotContainer {
         // Real implementations of IOs
         flywheel = new Flywheel(new FlywheelIOTalonFX());
         serializer =
-            new Serializer(new RollersIOTalonFX(IndexerConstants.Serializer.CAN_ID, IndexerConstants.CANBUS));
-        tunneler = new Rollers("Tunneler", new RollersIOTalonFX(IndexerConstants.Tunneler.CAN_ID, IndexerConstants.CANBUS));
-        intakeRollers = new Rollers("IntakeRollers", new RollersIOTalonFX(IntakeConstants.Rollers.CAN_ID, IntakeConstants.Rollers.CANBUS));
+            new Serializer(
+                new RollersIOTalonFX(IndexerConstants.Serializer.CAN_ID, IndexerConstants.CANBUS));
+        tunneler =
+            new Rollers(
+                "Tunneler",
+                new RollersIOTalonFX(IndexerConstants.Tunneler.CAN_ID, IndexerConstants.CANBUS));
+        intakeRollers =
+            new Rollers(
+                "IntakeRollers",
+                new RollersIOTalonFX(
+                    IntakeConstants.Rollers.CAN_ID, IntakeConstants.Rollers.CANBUS));
         break;
 
       case SIM:
@@ -58,11 +68,11 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    driverController.y().whileTrue(serializer.runVoltage(3.5));
-    driverController.y().whileTrue(tunneler.runVoltage(12.0));
-    driverController.y().whileTrue(flywheel.runVoltage(6.0));
-    driverController.x().whileTrue(intakeRollers.runVoltage(12.0));
-    driverController.a().whileTrue(serializer.runVoltage(-3.5));
+    // driverController.y().whileTrue(serializer.runVoltage(3.5));
+    // driverController.y().whileTrue(tunneler.runVoltage(12.0));
+    driverController.y().whileTrue(flywheel.runVelocity(RadiansPerSecond.of(300)));
+    // driverController.x().whileTrue(intakeRollers.runVoltage(12.0));
+    // driverController.a().whileTrue(serializer.runVoltage(-3.5));
   }
 
   public Command getAutonomousCommand() {

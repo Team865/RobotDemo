@@ -11,7 +11,7 @@ public class FlywheelIOSim implements FlywheelIO {
 
   @Override
   public void updateInputs(FlywheelIOInputsAutoLogged inputs) {
-    inputs.connected = true;
+    inputs.masterConnected = true;
     inputs.appliedVoltage = voltage;
   }
 }
