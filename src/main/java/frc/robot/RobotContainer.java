@@ -11,6 +11,9 @@ import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.FlywheelIO;
 import frc.robot.subsystems.flywheel.FlywheelIOSim;
 import frc.robot.subsystems.flywheel.FlywheelIOTalonFX;
+import frc.robot.subsystems.indexer.IndexerConstants;
+import frc.robot.subsystems.indexer.Serializer;
+import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.rollers.Rollers;
 import frc.robot.subsystems.rollers.RollersIO;
 import frc.robot.subsystems.rollers.RollersIOSim;
@@ -19,7 +22,7 @@ import frc.robot.subsystems.rollers.RollersIOTalonFX;
 public class RobotContainer {
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final Flywheel flywheel;
-  private final Rollers serializer;
+  private final Serializer serializer;
   private final Rollers tunneler;
   private final Rollers intakeRollers;
 
@@ -28,15 +31,16 @@ public class RobotContainer {
       case REAL:
         // Real implementations of IOs
         flywheel = new Flywheel(new FlywheelIOTalonFX());
-        serializer = new Rollers("Serializer", new RollersIOTalonFX(17, "CANivore"));
-        tunneler = new Rollers("Tunneler", new RollersIOTalonFX(18, "CANivore"));
-        intakeRollers = new Rollers("IntakeRollers", new RollersIOTalonFX(14, "rio"));
+        serializer =
+            new Serializer(new RollersIOTalonFX(IndexerConstants.Serializer.CAN_ID, IndexerConstants.CANBUS));
+        tunneler = new Rollers("Tunneler", new RollersIOTalonFX(IndexerConstants.Tunneler.CAN_ID, IndexerConstants.CANBUS));
+        intakeRollers = new Rollers("IntakeRollers", new RollersIOTalonFX(IntakeConstants.Rollers.CAN_ID, IntakeConstants.Rollers.CANBUS));
         break;
 
       case SIM:
         // Simulation implementations of IOs
         flywheel = new Flywheel(new FlywheelIOSim());
-        serializer = new Rollers("Serializer", new RollersIOSim());
+        serializer = new Serializer(new RollersIOSim());
         tunneler = new Rollers("Tunneler", new RollersIOSim());
         intakeRollers = new Rollers("IntakeRollers", new RollersIOSim());
         break;
@@ -44,7 +48,7 @@ public class RobotContainer {
       default:
         // Empty implementations of IOs
         flywheel = new Flywheel(new FlywheelIO() {});
-        serializer = new Rollers("Serializer", new RollersIO() {});
+        serializer = new Serializer(new RollersIO() {});
         tunneler = new Rollers("Tunneler", new RollersIO() {});
         intakeRollers = new Rollers("IntakeRollers", new RollersIO() {});
         break;

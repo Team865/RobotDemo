@@ -1,6 +1,7 @@
 package frc.robot.subsystems.rollers;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -13,7 +14,7 @@ public class RollersIOTalonFX implements RollersIO {
 
   private final StatusSignal<Voltage> voltageSignal;
 
-  public RollersIOTalonFX(int canId, String canbus) {
+  public RollersIOTalonFX(int canId, CANBus canbus) {
     motor = new TalonFX(canId, canbus);
 
     voltageSignal = motor.getMotorVoltage();
