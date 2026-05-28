@@ -25,11 +25,12 @@ public class FlywheelIOTalonFX implements FlywheelIO {
   private final StatusSignal<Voltage> voltageSignal;
   private final StatusSignal<AngularVelocity> velocitySignal;
 
-  public FlywheelIOTalonFX() {
-    TalonFXConfiguration config = new TalonFXConfiguration();
+  private final TalonFXConfiguration config = new TalonFXConfiguration();
 
-    config.Slot0.kP = 1.0;
-    // config.Slot0.kD = 0.01;
+  public FlywheelIOTalonFX() {
+    config.CurrentLimits.SupplyCurrentLimit = 200.0;
+    config.CurrentLimits.SupplyCurrentLimitEnable = true;
+
     config.Slot0.kS = 0.2;
     config.Slot0.kV = 5.8 / 49.5;
 
@@ -63,5 +64,14 @@ public class FlywheelIOTalonFX implements FlywheelIO {
     inputs.appliedVoltage = voltageSignal.getValueAsDouble();
     inputs.velocity = velocitySignal.getValue();
     inputs.targetVelocity = targetVelocity;
+  }
+
+  @Override
+  public void setGains(double kP, double kD) {
+    config.Slot0.kP = kP;
+    config.Slot0.kD = kD;
+
+    mainMotor.getConfigurator().apply(config);
+    followerMotor.getConfigurator().apply(config);
   }
 }

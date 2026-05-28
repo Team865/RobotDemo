@@ -21,4 +21,6 @@ public interface FlywheelIO {
   public default void setVelocity(AngularVelocity velocity) {}
 
   public default void updateInputs(FlywheelIOInputsAutoLogged inputs) {}
+
+  public default void setGains(double kP, double kD) {}
 }

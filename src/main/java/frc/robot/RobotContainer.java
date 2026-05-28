@@ -68,9 +68,12 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    // driverController.y().whileTrue(serializer.runVoltage(3.5));
-    // driverController.y().whileTrue(tunneler.runVoltage(12.0));
+    driverController.rightTrigger().whileTrue(serializer.runVoltage(3.5));
+    driverController.rightTrigger().whileTrue(tunneler.runVoltage(12.0));
     driverController.y().whileTrue(flywheel.runVelocity(RadiansPerSecond.of(300)));
+    driverController.x().whileTrue(flywheel.runVelocity(RadiansPerSecond.of(200)));
+    driverController.b().whileTrue(flywheel.runVelocity(RadiansPerSecond.of(400)));
+    driverController.a().whileTrue(flywheel.runVelocity(RadiansPerSecond.of(500)));
     // driverController.x().whileTrue(intakeRollers.runVoltage(12.0));
     // driverController.a().whileTrue(serializer.runVoltage(-3.5));
   }
