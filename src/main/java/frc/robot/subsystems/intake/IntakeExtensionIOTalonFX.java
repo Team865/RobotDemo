@@ -32,14 +32,19 @@ public class IntakeExtensionIOTalonFX implements IntakeExtensionIO {
   private final TalonFXConfiguration config = new TalonFXConfiguration();
 
   public IntakeExtensionIOTalonFX() {
+    motor = new TalonFX(IntakeConstants.Extension.CAN_ID, IntakeConstants.Extension.CANBUS);
 
-    motor = new TalonFX(IntakeConstants.Extension.CAN_ID);
+    config.Feedback.SensorToMechanismRatio = IntakeConstants.Extension.gearRatio;
 
     voltageSignal = motor.getMotorVoltage();
     anglularPositionSignal = motor.getPosition();
     statorCurrentSignal = motor.getStatorCurrent();
     supplyCurrentSignal = motor.getSupplyCurrent();
     angularVelocitySignal = motor.getVelocity();
+
+    motor.getConfigurator().apply(config);
+
+    motor.setPosition(0.0);
   }
 
   @Override
@@ -57,13 +62,21 @@ public class IntakeExtensionIOTalonFX implements IntakeExtensionIO {
 
   @Override
   public void updateInputs(IntakeExtensionIOInputsAutoLogged inputs) {
-    inputs.connected = BaseStatusSignal.refreshAll(voltageSignal, anglularPositionSignal).isOK();
+    inputs.connected =
+        BaseStatusSignal.refreshAll(
+                voltageSignal,
+                anglularPositionSignal,
+                angularVelocitySignal,
+                statorCurrentSignal,
+                supplyCurrentSignal)
+            .isOK();
 
     inputs.appliedVoltage = voltageSignal.getValueAsDouble();
     inputs.distance =
         AngleToDistance.toDistance(
             anglularPositionSignal.getValue(), IntakeConstants.Extension.radius);
     inputs.angle = anglularPositionSignal.getValue();
+    inputs.targetDistance = this.targetDistance;
     inputs.statorCurrent = statorCurrentSignal.getValueAsDouble();
     inputs.supplyCurrent = supplyCurrentSignal.getValueAsDouble();
     inputs.angularVelocity = angularVelocitySignal.getValue();

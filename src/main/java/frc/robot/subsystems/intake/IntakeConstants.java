@@ -14,7 +14,7 @@ public class IntakeConstants {
 
   public static class Extension {
     public static final int CAN_ID = 15;
-    public static final CANBus BANBUS = CANBuses.CANIVORE;
+    public static final CANBus CANBUS = CANBuses.CANIVORE;
     public static final Distance radius = Inches.of(1.14);
     public static final double gearRatio = 27.0 / 1.0;
   }

@@ -16,6 +16,9 @@ import frc.robot.subsystems.flywheel.FlywheelIOTalonFX;
 import frc.robot.subsystems.indexer.IndexerConstants;
 import frc.robot.subsystems.indexer.Serializer;
 import frc.robot.subsystems.intake.IntakeConstants;
+import frc.robot.subsystems.intake.IntakeExtension;
+import frc.robot.subsystems.intake.IntakeExtensionIO;
+import frc.robot.subsystems.intake.IntakeExtensionIOTalonFX;
 import frc.robot.subsystems.rollers.Rollers;
 import frc.robot.subsystems.rollers.RollersIO;
 import frc.robot.subsystems.rollers.RollersIOSim;
@@ -27,6 +30,7 @@ public class RobotContainer {
   private final Serializer serializer;
   private final Rollers tunneler;
   private final Rollers intakeRollers;
+  private final IntakeExtension intakeExtension;
 
   public RobotContainer() {
     switch (Constants.currentMode) {
@@ -45,6 +49,7 @@ public class RobotContainer {
                 "IntakeRollers",
                 new RollersIOTalonFX(
                     IntakeConstants.Rollers.CAN_ID, IntakeConstants.Rollers.CANBUS));
+        intakeExtension = new IntakeExtension(new IntakeExtensionIOTalonFX());
         break;
 
       case SIM:
@@ -53,6 +58,7 @@ public class RobotContainer {
         serializer = new Serializer(new RollersIOSim());
         tunneler = new Rollers("Tunneler", new RollersIOSim());
         intakeRollers = new Rollers("IntakeRollers", new RollersIOSim());
+        intakeExtension = new IntakeExtension(new IntakeExtensionIO() {}); // TODO
         break;
 
       default:
@@ -61,6 +67,7 @@ public class RobotContainer {
         serializer = new Serializer(new RollersIO() {});
         tunneler = new Rollers("Tunneler", new RollersIO() {});
         intakeRollers = new Rollers("IntakeRollers", new RollersIO() {});
+        intakeExtension = new IntakeExtension(new IntakeExtensionIO() {});
         break;
     }
 
@@ -71,9 +78,12 @@ public class RobotContainer {
     driverController.rightTrigger().whileTrue(serializer.runVoltage(3.5));
     driverController.rightTrigger().whileTrue(tunneler.runVoltage(12.0));
     driverController.y().whileTrue(flywheel.runVelocity(RadiansPerSecond.of(300)));
-    driverController.x().whileTrue(flywheel.runVelocity(RadiansPerSecond.of(200)));
-    driverController.b().whileTrue(flywheel.runVelocity(RadiansPerSecond.of(400)));
-    driverController.a().whileTrue(flywheel.runVelocity(RadiansPerSecond.of(500)));
+    driverController.x().whileTrue(intakeExtension.runVoltage(6.5));
+    driverController.b().whileTrue(intakeExtension.runVoltage(-3.0));
+
+    // driverController.x().whileTrue(flywheel.runVelocity(RadiansPerSecond.of(200)));
+    // driverController.b().whileTrue(flywheel.runVelocity(RadiansPerSecond.of(400)));
+    // driverController.a().whileTrue(flywheel.runVelocity(RadiansPerSecond.of(500)));
     // driverController.x().whileTrue(intakeRollers.runVoltage(12.0));
     // driverController.a().whileTrue(serializer.runVoltage(-3.5));
   }
